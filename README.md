@@ -22,18 +22,26 @@ docker exec -it ORCL-11g bash
 sqlplus sys/oracle as sysdba
 ```
 
-### Step-5
+### Step-5.1
 
 ```SQL
 CREATE USER demo IDENTIFIED BY demo;
+```
+### Step-5.5
+
+```SQL
 GRANT CONNECT,RESOURCE,DBA,UNLIMITED TABLESPACE TO demo;
+```
+### Step-5.3
+
+```SQL
 EXIT
 ```
 
 ### Step-6
 
 ```bash
-impdp system/oracle DIRECTORY=DATA_PUMP_DIR DUMPFILE=TABLES.dmp REMAP_SCHEMA=uni:demo
+impdp system/oracle DIRECTORY=DATA_PUMP_DIR DUMPFILE=TABLES.dmp
 ```
 
 ### Step-7
