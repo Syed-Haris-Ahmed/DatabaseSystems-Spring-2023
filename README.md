@@ -1,3 +1,9 @@
+### Step-0
+
+```bash
+git clone -b database https://github.com/asimriaz/DatabaseSystems-Spring-2023.git && cd DatabaseSystems-Spring-2023
+```
+
 ### Step-1
 
 ```bash
