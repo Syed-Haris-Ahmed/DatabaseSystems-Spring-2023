@@ -19,13 +19,11 @@ services:
                     "-c",
                     "echo 'select 1 from dual;' | ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -s sys/oralce@localhost",
                 ]
-            # docker inspect --format "{{json .State.Health }}"  myproject_db_1
             interval: 5s
             timeout: 30s
             retries: 5
 
     app:
-        #        image: node:16.20-buster
         build:
             dockerfile: Dockerfile
         working_dir: /usr/src/app
@@ -38,11 +36,5 @@ services:
         depends_on:
             oradb:
                 condition: service_healthy
-        #        environment:
-        #            - DB_HOST=mysqldb
-        #            - DB_USER=root
-        #            - DB_PASSWORD=123456
-        #            - DB_NAME=lms
-        #            - DB_PORT=3306
         stdin_open: true
         tty: true
