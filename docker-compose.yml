@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
     oradb:
+        container_name: ORACLE-11g
         image: wnameless/oracle-xe-11g-r2
         restart: unless-stopped
         environment:
@@ -24,12 +25,13 @@ services:
             retries: 5
 
     app:
+        container_name: node-app
         build:
             dockerfile: Dockerfile
         working_dir: /usr/src/app
         volumes:
             - ./app:/usr/src/app
-        command: bash -c "npm i -g nodemon && npm install && nodemon index.js"
+        command: bash -c "npm i -g nodemon && npm install && nodemon -L index.js"
         restart: unless-stopped
         ports:
             - 5001:5001
