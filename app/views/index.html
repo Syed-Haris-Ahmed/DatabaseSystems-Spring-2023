@@ -1,12 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AlpineJS</title>
-</head>
-<body>
-    <h1>HELLO WORLD</h1>
-</body>
+    <script src="alpinejs-3.12.0-min.js" defer></script>
+    <style>
+      table,
+      th,
+      tr,
+      td {
+        border-collapse: collapse;
+        border: 1px solid #808080;
+      }
+      a:visited {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body
+    x-data="{
+    page:1,
+    metaData: [],
+    employees:[],
+    empl:[], 
+    getEmployees(){
+        fetch('/employees')
+        .then((response) => response.json())
+        .then((json) => {
+            this.employees = json.rows;
+            console.log(this.employees);
+        });        
+    }, 
+    showDetails(empno){
+        fetch(`/empno/${empno}`)
+        .then((response) => response.json())
+        .then((json) => {
+            this.empl = json.rows[0];
+            this.metaData = json.metaData;
+            console.log(this.empl);
+            this.page = 2
+        });        
+
+        console.log(empno);
+    }
+  }"
+    x-init="getEmployees()"
+  >
+    <div x-show="page === 1">
+      <h1>List</h1>
+      <table>
+        <tr>
+          <th>Emp No</th>
+          <th>Name</th>
+        </tr>
+        <template x-for="emp in employees">
+          <tr>
+            <td x-text="emp[0]"></td>
+            <td>
+              <a href="#" x-text="emp[1]" @click="showDetails(`${emp[0]}`)"></a>
+            </td>
+          </tr>
+        </template>
+      </table>
+    </div>
+    <div x-show="page === 2">
+      <h1>Details</h1>
+      <table>
+        <template x-for="(col, index) in empl">
+          <tr>
+            <th x-text="`${metaData[index].name}:`" style="text-align: left;"></th>
+            <td x-text="col"></td>
+          </tr>
+        </template>
+      </table>
+      <a href="#" @click="page=3">Edit</a>
+    </div>
+    <div x-show="page === 3">
+      <h1>Edit</h1>
+      <table>
+        <template x-for="(col, index) in empl">
+          <tr>
+            <th x-text="`${metaData[index].name}:`" style="text-align: left;"></th>
+            <td>
+                <input type="text" x-model="col">
+            </td>
+          </tr>
+        </template>
+      </table>
+    </div>
+  </body>
 </html>

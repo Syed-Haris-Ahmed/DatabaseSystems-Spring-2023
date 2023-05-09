@@ -6,7 +6,8 @@ const express = require("express"),
 
 const PORT = process.env.PORT || 5001;
 
-app.use(express.static(path.join(__dirname, "public")))
+  app
+    .use(express.static(path.join(__dirname, "public")))
     .use(async (req, res, next) => {
         req.conn = await oracledb.getConnection(dbConfig);
         next();
@@ -15,9 +16,19 @@ app.use(express.static(path.join(__dirname, "public")))
     .engine("html", require("ejs").renderFile)
     .set("view engine", "html")
     .get("/", async (req, res) => {
+        res.render("index");
+    })
+    .get("/employees", async (req, res) => {
+        const result = await req.conn.execute(
+            `SELECT empno, ename FROM emp`,
+        );
+        res.status(200).json(result);
+    })
+    .get("/empno/:empno", async (req, res) => {
+        const empno = req.params.empno;
         const result = await req.conn.execute(
             `SELECT * FROM emp WHERE empno = :empno`,
-            [7369] // bind value for :empno
+            [empno] // bind value for :empno
         );
         res.status(200).json(result);
     })
